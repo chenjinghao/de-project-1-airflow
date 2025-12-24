@@ -14,7 +14,7 @@ from io import BytesIO
 import pandas as pd
 import logging
 
-from include.stock_data_func.functions import _connect_database
+from include.object_storage.connect_database import _connect_database
 
 FUNCTION = 'TIME_SERIES_INTRADAY'
 SYMBOL = 'AAPL'

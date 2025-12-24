@@ -5,6 +5,7 @@ import logging
 from airflow.sdk.bases.hook import BaseHook
 from airflow.exceptions import AirflowException
 from include.object_storage.connect_database import _connect_database
+import time
 
 
 
@@ -73,7 +74,7 @@ def extract_price_top5_most_active_stocks(file_path, **context):
         for symbol in top5_stocks:
             stock_response = re.get(
                 url,
-                params={'function': 'TIME_SERIES_DAILY_ADJUSTED', 
+                params={'function': 'TIME_SERIES_DAILY', 
                         'symbol': symbol,
                         'apikey': api.password},
                 timeout=10
@@ -90,6 +91,7 @@ def extract_price_top5_most_active_stocks(file_path, **context):
                 length=len(data)
             )
             logging.info(f"Stored price data for {symbol} at {objw.bucket_name}/{folder_name}/price/{top5_stocks.index(symbol)}_{symbol}_stocks_price.json")
+            time.sleep(2)  # To respect API rate limits
         return f"All price data for top 5 most active stocks stored in {bucket_name}/{folder_name}/price/"
 
     except re.exceptions.RequestException as e:
@@ -131,6 +133,7 @@ def extract_news_top5_most_active_stocks(**context):
             )
 
             logging.info(f"Stored news data for {symbol} at {objw.bucket_name}/{folder_name}/news/{top5_stocks.index(symbol)}_{symbol}_stocks_news.json")
+            time.sleep(2)
         return f"All news data for top 5 most active stocks stored in {bucket_name}/{folder_name}/news/"
     
     except re.exceptions.RequestException as e:
@@ -172,6 +175,7 @@ def extract_insider_top5_most_active_stocks(**context):
             )
 
             logging.info(f"Stored insider data for {symbol} at {objw.bucket_name}/{folder_name}/insider/{top5_stocks.index(symbol)}_{symbol}_stocks_insider.json")
+            time.sleep(2)  # To respect API rate limits
         return f"All insider data for top 5 most active stocks stored in {bucket_name}/{folder_name}/insider/"
     
     except re.exceptions.RequestException as e:

@@ -30,30 +30,30 @@ services:
     networks:
       - airflow
 
-  spark-master:
-    image: airflow/spark-master
-    build: ./spark/master
-    container_name: spark-master
-    ports:
-      - "8082:8080"
-      - "7077:7077"
-    environment:
-      - INIT_DAEMON_STEP=setup_spark
-    networks:
-      - airflow
+  # spark-master:
+  #   image: airflow/spark-master
+  #   build: ./spark/master
+  #   container_name: spark-master
+  #   ports:
+  #     - "8082:8080"
+  #     - "7077:7077"
+  #   environment:
+  #     - INIT_DAEMON_STEP=setup_spark
+  #   networks:
+  #     - airflow
 
-  spark-worker:
-    image: airflow/spark-worker
-    build: ./spark/worker
-    container_name: spark-worker
-    depends_on:
-      - spark-master
-    ports:
-      - "8081:8081"
-    environment:
-      - "SPARK_MASTER=spark://spark-master:7077"
-    networks:
-      - airflow
+  # spark-worker:
+  #   image: airflow/spark-worker
+  #   build: ./spark/worker
+  #   container_name: spark-worker
+  #   depends_on:
+  #     - spark-master
+  #   ports:
+  #     - "8081:8081"
+  #   environment:
+  #     - "SPARK_MASTER=spark://spark-master:7077"
+  #   networks:
+  #     - airflow
 
   metabase:
     image: metabase/metabase:v0.50.4
@@ -65,12 +65,45 @@ services:
     networks:
       - airflow
 
-  docker-proxy:
-    image: alpine/socat
-    command: "TCP4-LISTEN:2375,fork,reuseaddr UNIX-CONNECT:/var/run/docker.sock"
+  # docker-proxy:
+  #   image: alpine/socat
+  #   command: "TCP4-LISTEN:2375,fork,reuseaddr UNIX-CONNECT:/var/run/docker.sock"
+  #   ports:
+  #     - "12376:2375"
+  #   volumes:
+  #     - /var/run/docker.sock:/var/run/docker.sock
+  #   networks:
+  #     - airflow
+
+  database:
+    image: postgres:12.6
+    container_name: postgres_stocks_db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: stocks_db
     ports:
-      - "2376:2375"
+      - "5000:5432"
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
+      - ./include/data/postgres:/var/lib/postgresql/data
     networks:
       - airflow
+
+  pgadmin:
+    image: dpage/pgadmin4:9.11
+    container_name: pgadmin
+    depends_on:
+      - database
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@example.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+      PGADMIN_CONFIG_SERVER_MODE: 'False'  # enable multi-user UI in single instance
+    ports:
+      - "5050:80"
+    volumes:
+      - ./include/data/pgadmin:/var/lib/pgadmin
+    networks:
+      - airflow
+networks:
+  airflow:
+    driver: bridge
