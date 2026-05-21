@@ -27,7 +27,8 @@ models:
         tests:
           - not_null
           - accepted_values:
-              values: [1, 2, 3]
+              arguments:
+                values: [1, 2, 3]
 
   - name: stg_news
     description: "News articles with ticker sentiment data extracted from raw JSON"
@@ -52,7 +53,8 @@ models:
         description: "Sentiment label (Bullish, Bearish, Neutral)"
         tests:
           - accepted_values:
-              values: ['Bullish', 'Somewhat-Bullish', 'Neutral', 'Somewhat-Bearish', 'Bearish']
+              arguments:
+                values: ['Bullish', 'Somewhat-Bullish', 'Neutral', 'Somewhat-Bearish', 'Bearish']
               config:
                 severity: warn
       - name: ticker_sentiment_score

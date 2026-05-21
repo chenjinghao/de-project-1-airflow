@@ -8,26 +8,26 @@ models:
     columns:
       - name: extraction_date
         description: "Date the data was extracted"
-        data_test:
+        tests:
           - not_null
       - name: symbol
         description: "Stock ticker symbol"
-        data_test:
+        tests:
           - not_null
       - name: price_date
         description: "Trading date for the price record"
-        data_test:
+        tests:
           - not_null
       - name: pct_daily_change
         description: "Percentage daily price change ((close - open) / open * 100)"
-        data_test:
+        tests:
           - not_null
       - name: diff_vol
         description: "Volume difference compared to previous day"
-        data_test:
+        tests:
           - not_null
 
-    data_test:
+    tests:
       - unique:
           column_name: "(extraction_date || '-' || symbol || '-' || price_date)"
 
@@ -38,17 +38,17 @@ models:
     columns:
       - name: date
         description: "Trading/extraction date"
-        data_test:
+        tests:
           - not_null
       - name: ticker
         description: "Stock ticker symbol"
-        data_test:
+        tests:
           - not_null
       - name: price
         description: "Current stock price"
       - name: volume
         description: "Trading volume"
-        data_test:
+        tests:
           - not_null
       - name: change_amount
         description: "Absolute price change"
@@ -56,10 +56,10 @@ models:
         description: "Percentage price change"
       - name: rn
         description: "Rank by volume within each date (1-3)"
-        data_test:
+        tests:
           - accepted_values:
-            arguments:
-              values: [1, 2, 3]
+              arguments:
+                values: [1, 2, 3]
       - name: avg_close_price_past_100days
         description: "Average closing price over past 100 days"
       - name: max_price_past_100days
@@ -74,14 +74,16 @@ models:
         description: "Minimum trading volume over past 100 days"
       - name: price_vs_100days_avg
         description: "Indicator if current price is above/below 100-day average"
-        data_test:
+        tests:
           - accepted_values:
-              values: ['Above Average 100 Days price', 'Below Average 100 Days price']
+              arguments:
+                values: ['Above Average 100 Days price', 'Below Average 100 Days price']
       - name: volume_vs_100days_avg
         description: "Indicator if current volume is above/below 100-day average"
-        data_test:
+        tests:
           - accepted_values:
-              values: ['Above Average 100 Days volume', 'Below Average 100 Days volume']
+              arguments:
+                values: ['Above Average 100 Days volume', 'Below Average 100 Days volume']
       - name: bullish_count
         description: "Count of bullish sentiment news articles"
       - name: bearish_count
@@ -95,7 +97,7 @@ models:
       - name: avg_sentiment_score
         description: "Average sentiment score across all news articles"
 
-    data_test:
+    tests:
       - unique:
           column_name: "(date || '-' || ticker)"
 
@@ -106,7 +108,7 @@ models:
     columns:
       - name: extraction_date
         description: "Date the news data was extracted"
-        data_test:
+        tests:
           - not_null
       - name: url
         description: "URL of the news article"
@@ -116,19 +118,20 @@ models:
         description: "Article summary text"
       - name: time_published_date
         description: "Date the article was published"
-        data_test:
+        tests:
           - not_null
       - name: mentioned_ticker
         description: "Stock ticker mentioned in the article"
-        data_test:
+        tests:
           - not_null
       - name: ticker_relevance_score
         description: "Relevance score of ticker to article (0-1)"
       - name: ticker_sentiment_label
         description: "Sentiment label (Bullish, Bearish, Neutral, etc.)"
-        data_test:
+        tests:
           - accepted_values:
-              values: ['Bullish', 'Somewhat-Bullish', 'Neutral', 'Somewhat-Bearish', 'Bearish']
+              arguments:
+                values: ['Bullish', 'Somewhat-Bullish', 'Neutral', 'Somewhat-Bearish', 'Bearish']
               config:
                 severity: warn
       - name: ticker_sentiment_score

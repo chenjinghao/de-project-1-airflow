@@ -50,7 +50,7 @@ jobs:
               extra:
                 endpoint_url: "http://minio:9000"
 
-            - conn_id: postgres_stocks
+            - conn_id: postgres_stock
               conn_type: postgres
               description: "Stocks PostgreSQL Database"
               host: database
