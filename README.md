@@ -1,4 +1,5 @@
 # Financial Market ELT Pipeline
+[![Skills](https://skills.syvixor.com/api/icons?perline=15&i=docker,googlecloud,python,airflow,postgresql,dbt,streamlit,github)](https://github.com/syvixor/skills-icons)
 
 Production-style data engineering project that ingests daily stock market and news sentiment data from Alpha Vantage, stores raw API responses in object storage, loads structured data into PostgreSQL, transforms it with dbt, and serves analytics-ready marts to dashboard applications.
 
