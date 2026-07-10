@@ -28,7 +28,7 @@ services:
       - "0.0.0.0:${POSTGRES_PORT:-5000}:5432" # uncomment this line when commit to g
       # - 5000:5432 # uncomment this line when run locally
     volumes:
-      - ./include/data/postgres:/var/lib/postgresql/data
+      - ./.postgres_data:/var/lib/postgresql/data
     networks:
       - airflow
 
