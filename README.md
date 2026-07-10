@@ -5,8 +5,12 @@ Production-style data engineering project that ingests daily stock market and ne
 This repository is the backend pipeline for the live dashboard project:
 
 - Live Streamlit dashboard: [JINGHAOdata.engineer](https://www.jinghaodata.engineer/)
-- Tableau Public dashboard: [Tickers Analysis Dashboard](https://public.tableau.com/views/TickersAnalysisDashboard/Dashboard?:language=en-US&:sid=&:redirect=auth&:display_count=n&:origin=viz_share_link)
+- Power BI dashboard version: [Microsoft Fabric & Power BI dashboard](https://github.com/chenjinghao/ms_fabric_project)
+- Tableau Public dashboard version: [Tickers Analysis Dashboard](https://public.tableau.com/views/TickersAnalysisDashboard/Dashboard?:language=en-US&:sid=&:redirect=auth&:display_count=n&:origin=viz_share_link)
 - Frontend repository: [de-project-2-Streamlit-4-Viz](https://github.com/chenjinghao/de-project-2-Streamlit-4-Viz)
+
+**YouTube Dashboard Demo video:**
+[![Watch the video](https://img.youtube.com/vi/HWq92IGbM04/0.jpg)](https://www.youtube.com/watch?v=HWq92IGbM04)
 
 ## What This Demonstrates
 
