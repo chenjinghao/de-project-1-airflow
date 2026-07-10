@@ -11,6 +11,7 @@ This repository is the backend pipeline for the live dashboard project:
 - Frontend repository: [de-project-2-Streamlit-4-Viz](https://github.com/chenjinghao/de-project-2-Streamlit-4-Viz)
 
 **YouTube Dashboard Demo video:**
+
 [![Watch the video](https://img.youtube.com/vi/HWq92IGbM04/0.jpg)](https://www.youtube.com/watch?v=HWq92IGbM04)
 
 ## What This Demonstrates
