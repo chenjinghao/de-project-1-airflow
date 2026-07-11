@@ -1,5 +1,6 @@
 import logging
 import json
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from psycopg2.extras import Json, execute_values
 from psycopg2 import sql
 from airflow.providers.postgres.hooks.postgres import PostgresHook
@@ -278,17 +279,34 @@ def load_2_db_biz_lookup(**kwargs):
                 ])
             )
 
-            def generate_records():
-                for key in json_keys:
-                    data = _load_json(client, BUCKET_NAME, key)
-                    if not data: continue
+            def fetch_and_process(key):
+                data = _load_json(client, BUCKET_NAME, key)
+                if not data:
+                    return []
+                records = data if isinstance(data, list) else [data]
+                processed_rows = []
+                for record in records:
+                    if not isinstance(record, dict) or "Symbol" not in record:
+                        continue
+                    # _normalize_value function needs to be in scope or imported
+                    processed_rows.append([_normalize_value(record.get(c)) for c in BIZ_LOOKUP_COLUMNS])
+                return processed_rows
 
-                    records = data if isinstance(data, list) else [data]
-                    for record in records:
-                        if not isinstance(record, dict) or "Symbol" not in record:
-                            continue
-                        # _normalize_value function needs to be in scope or imported
-                        yield [_normalize_value(record.get(c)) for c in BIZ_LOOKUP_COLUMNS]
+            def generate_records():
+                # Filter keys first to avoid overhead if list is empty
+                if not json_keys:
+                    return
+
+                with ThreadPoolExecutor() as executor:
+                    future_to_key = {executor.submit(fetch_and_process, key): key for key in json_keys}
+                    for future in as_completed(future_to_key):
+                        key = future_to_key[future]
+                        try:
+                            rows = future.result()
+                            for row in rows:
+                                yield row
+                        except Exception as exc:
+                            logging.error(f"File {key} generated an exception: {exc}")
 
             # 3. Execute Values
             # execute_values handles the VALUES %s expansion automatically
